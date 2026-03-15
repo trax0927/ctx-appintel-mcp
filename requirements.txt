@@ -1,0 +1,9 @@
+ctxprotocol[fastapi]
+playwright
+redis
+pandas
+apscheduler
+httpx
+python-dotenv
+uvicorn
+psycopg2-binary
