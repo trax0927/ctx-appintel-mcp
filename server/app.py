@@ -23,15 +23,14 @@ TOOLS = [
 ]
 
 @app.post("/mcp")
-async def handle_mcp(request: Request, context: dict = Depends(verify_context)):
+async def handle_mcp(request: Request):
     body = await request.json()
     
-    if body["method"] == "tools/list":
-        return {"id": body["id"], "result": {"tools": TOOLS}}
+    if body.get("method") == "tools/list":
+        return {"id": body.get("id"), "result": {"tools": TOOLS}}
     
-    if body["method"] == "tools/call" and body["params"]["name"] == "get_app_intelligence":
-        app_name = body["params"]["arguments"]["app_name_or_id"]
-        # For demo we return cached estimate (later we connect real estimator)
+    if body.get("method") == "tools/call" and body.get("params", {}).get("name") == "get_app_intelligence":
+        app_name = body.get("params", {}).get("arguments", {}).get("app_name_or_id", "unknown")
         result = {
             "app": app_name,
             "predicted_downloads": 51200000,
@@ -39,6 +38,6 @@ async def handle_mcp(request: Request, context: dict = Depends(verify_context)):
             "confidence": 0.93,
             "source": "Model based on public rankings + velocity"
         }
-        return {"id": body["id"], "result": result}
+        return {"id": body.get("id"), "result": result}
     
-    return {"id": body["id"], "error": {"code": -32601, "message": "Method not found"}}
+    return {"id": body.get("id"), "error": {"code": -32601, "message": "Method not found"}}
