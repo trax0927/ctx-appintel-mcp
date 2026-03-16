@@ -23,7 +23,7 @@ TOOLS = [
 ]
 
 @app.post("/mcp")
-async def handle_mcp(request: Request): # add this dependency to verify incoming requests are from the context protocol , context: dict = Depends(verify_context)
+async def handle_mcp(request: Request, context: dict = Depends(verify_context)):
     body = await request.json()
     
     if body["method"] == "tools/list":
@@ -31,7 +31,7 @@ async def handle_mcp(request: Request): # add this dependency to verify incoming
     
     if body["method"] == "tools/call" and body["params"]["name"] == "get_app_intelligence":
         app_name = body["params"]["arguments"]["app_name_or_id"]
-        # For demo we return cached estimate
+        # For demo we return cached estimate (later we connect real estimator)
         result = {
             "app": app_name,
             "predicted_downloads": 51200000,
