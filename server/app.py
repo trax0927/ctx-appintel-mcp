@@ -1,10 +1,7 @@
-from fastapi import FastAPI, Request, Depends, HTTPException
-from ctxprotocol import create_context_middleware, verify_context_request, is_protected_mcp_method
+from fastapi import FastAPI, Request
 import json
 
 app = FastAPI(title="AppIntel MCP Tool")
-
-verify_context = create_context_middleware(audience="https://your-tool.onrender.com/mcp")
 
 TOOLS = [
     {
@@ -26,11 +23,11 @@ TOOLS = [
 async def handle_mcp(request: Request):
     body = await request.json()
     
-    if body.get("method") == "tools/list":
-        return {"id": body.get("id"), "result": {"tools": TOOLS}}
+    if body["method"] == "tools/list":
+        return {"id": body["id"], "result": {"tools": TOOLS}}
     
-    if body.get("method") == "tools/call" and body.get("params", {}).get("name") == "get_app_intelligence":
-        app_name = body.get("params", {}).get("arguments", {}).get("app_name_or_id", "unknown")
+    if body["method"] == "tools/call" and body["params"]["name"] == "get_app_intelligence":
+        app_name = body["params"]["arguments"]["app_name_or_id"]
         result = {
             "app": app_name,
             "predicted_downloads": 51200000,
@@ -38,6 +35,6 @@ async def handle_mcp(request: Request):
             "confidence": 0.93,
             "source": "Model based on public rankings + velocity"
         }
-        return {"id": body.get("id"), "result": result}
+        return {"id": body["id"], "result": result}
     
-    return {"id": body.get("id"), "error": {"code": -32601, "message": "Method not found"}}
+    return {"id": body["id"], "error": {"code": -32601, "message": "Method not found"}}
