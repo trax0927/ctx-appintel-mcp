@@ -1,8 +1,4 @@
-playwright
-redis
-pandas
-apscheduler
+fastapi
+uvicorn
 httpx
 python-dotenv
-uvicorn
-psycopg2-binary
