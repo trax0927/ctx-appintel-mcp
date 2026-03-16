@@ -23,7 +23,7 @@ TOOLS = [
 ]
 
 @app.post("/mcp")
-async def handle_mcp(request: Request, context: dict = Depends(verify_context)):
+async def handle_mcp(request: Request): # add this dependency to verify incoming requests are from the context protocol , context: dict = Depends(verify_context)
     body = await request.json()
     
     if body["method"] == "tools/list":
